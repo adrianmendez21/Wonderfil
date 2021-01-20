@@ -1,4 +1,6 @@
 The following are the files contains with a description of each:
 - index.html : Contains the html code for the format of the demo page.
 - javascript.js : Contains the javascript code functionality for the demo page. Included in this file is the code that handels the progress bar and calculations.
-- styles.css : Contains visual attributes for the demo page.
+- style.css : Contains visual attributes for the demo page.
+
+To test the html file, include all the files in the same folder and double click the index.html file.
