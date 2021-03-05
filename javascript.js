@@ -110,6 +110,11 @@ function ifCheck()
             elem.style.width = percent + "%";
             document.getElementById("dispensing").innerHTML = "Complete!";
             alert('Thank you! Have a Wonderfil day!');
+            document.getElementById("button16").style.display = "inline";
+            document.getElementById("button18").style.display = "inline";
+            document.getElementById("button24").style.display = "inline";
+            document.getElementById("stop").style.display = "none";
+            document.getElementById("select").innerHTML = "Please select the amount you'd like to dispense.";
             clearInterval(myVar);
         }
     
