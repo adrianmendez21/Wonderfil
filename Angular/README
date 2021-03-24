@@ -1,0 +1,8 @@
+To use the Angular files:
+- Download the files within the Angular folder
+    - include them all in a folder the way they appear in the github repository
+- Change the directory in the command line to be the name of the folder that has all the files
+- To run the code, use the following command:
+    "node bin/www" without the quotations
+- To view the HTML page, open a web browser and search up:
+    "localhost:3000" without the quotations
