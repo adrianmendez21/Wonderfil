@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <!-- <script src="template.js"></script> -->
+
+    <title>Wonderfil</title>
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/cover/">
+
+    <!-- Bootstrap core CSS -->
+    <link href="../../dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="cover.css" rel="stylesheet">
+  </head>
+
+  <body style="background-color:#b4a7d5;">
+    <div class="site-wrapper">
+
+      <div class="site-wrapper-inner">
+
+        <div class="cover-container">
+
+          <div class="inner cover">
+            <h1 style="text-align: center;" class="cover-heading">Dispensing Demo</h1>
+          </div>
+
+          <p id ="welc1" style="text-align: center;">Select one of the products to go to the respective screen.</p>
+
+          <div class="text-center">
+            <button id="screen1" style="display:visible;" onclick="screen1f()">
+              <!-- <img src="letterA.png" id="A"/> -->
+              Product 1
+            </button>
+
+            <button id="screen2" style="display:visible;" onclick="screen2f()">
+              <!-- <img src="letterA.png" id="A"/> -->
+              Product 2
+            </button>
+
+            <button id="screen3" style="display:visible;" onclick="screen3f()">
+              <!-- <img src="letterA.png" id="A"/> -->
+              Product 3
+            </button>
+          </div>
+
+          <div class="text-center">
+            <button id="screen4" style="display:visible;" onclick="screen4f()">
+              <!-- <img src="letterA.png" id="A"/> -->
+              Product 4
+            </button>
+
+            <button id="screen5" style="display:visible;" onclick="screen5f()">
+              <!-- <img src="letterA.png" id="A"/> -->
+              Product 5
+            </button>
+
+            <button id="screen6" style="display:visible;" onclick="screen6f()">
+              <!-- <img src="letterA.png" id="A"/> -->
+              Product 6
+            </button>
+          </div>
+
+          <p id ="product1" style="text-align:center; display:none">Welcome to Wonderfil! Below is a description for the product. You can also tap 'Ingredients' to find out the ingredient list to<br>the product. If you decide to use this product, tap on 'Dispense.'</p>
+          
+          <!-- Product 1 Specific -->
+          <p id="productName1" style="text-align:center; display:none">Orange Blossom ($0.54/ounce)</p>
+          <p id="productDesc1" style="text-align:center; display:none">Experience the wonder of Orange Blossom, the bubbliest of bubble baths. Add to running water to create a bubble kingdom and<br>embark on a remarkable bubble journey.</p>
+
+          <!-- Product 2 Specific -->
+          <p id="productName2" style="text-align:center; display:none">Bulgarian Lavender ($0.54/ounce)</p>
+          <p id="productDesc2" style="text-align:center; display:none">Experience the wonder of Bulgarian Lavender, the bubbliest of bubble baths. Add to running water to create a bubble kingdom and<br>embark on a remarkable bubble journey.</p>
+
+          <!-- Product 3 Specific -->
+          <p id="productName3" style="text-align:center; display:none">Angelica & Lavender ($0.54/ounce)</p>
+          <p id="productDesc3" style="text-align:center; display:none">Enjoy the soothing effect of this naturally delicate lavender and angelica aroma blend. Surrender your hair to the benefits of sage,<br>giving it glow and shine.</p>
+
+          <!-- Product 4 Specific -->
+          <p id="productName4" style="text-align:center; display:none">Goldenseal & Citrus ($0.54/ounce)</p>
+          <p id="productDesc4" style="text-align:center; display:none">Let our rejuvenating natural blend of citrus and ylang-ylang refresh you with while discovering the tonic and cleansing effects of<br>goldenseal, a boreal plant. You will appreciate the soothing touch of calendula and its delicate aroma on your skin.</p>
+
+          <div class="text-center">
+            <button id="dispenseProd" style="display:none;" onclick="selectSize()">
+              Dispense
+            </button>
+
+            <button id="ingredientList" style="display:none;" onclick="ingredients()">
+              Ingredients
+            </button>
+          </div>
+
+          <div class="text-center">
+            <p id="ingred" style="text-align: center; display:none">Ingredients</p>
+            <p id="ingredientDesc1" style="text-align: center; display:none">Coconut oil and hemp oil (saponified with retained glycerin), sodium coco sulfate, glycerin,<br>orange blossom essential oil blend, guar gum, MSM (methylsulfonylmethane), aloe vera, rosemary extract.</p>
+            <p id="ingredientDesc2" style="text-align: center; display:none">Coconut oil and hemp oil (saponified with retained glycerin), sodium coco sulfate, glycerin,<br>Bulgarian lavender essential oil blend, guar gum, MSM (methylsulfonylmethane), aloe vera, rosemary extract.</p>
+            <p id="ingredientDesc3" style="text-align: center; display:none">Purified water, Organic blend of Calendula officinalis (Calendula), Arctium lappa (Burdock root), Salvia officinalis (Sage), Urtica dioica (Nettle leaves), Rosmarinus officinalis (Rosemary), Taraxacum officinale (Dandelion), Equisetum arvense (Horsetail), Angelica archangelica (Angelica), Hydrastis Canadensis (Goldenseal), Sodium C14-16 olefin sulfonate, Cocamidopropyl betaine, Glycerin Coco-glucoside, Lauryl Hydroxysultaine, Glycereth-2 cocoate, Caprylyl Glycol, Ethylhexylglycerin, Panthenol (Vitamin B5), Hydrolyzed rice protein, Citric acid, Lauramine oxide, Cannabis Sativa (Hemp seed oil), Essential oil of Lavandula angustifolia (Lavender)</p>
+            <p id="ingredientDesc4" style="text-align: center; display:none">Purified water, Organic blend of Calendula officinalis (Calendula), Arctium lappa (Burdock root),<br>Salvia officinalis (Sage), Urtica dioica (Nettle leaves), Rosmarinus officinalis (Rosemary), Taraxacum officinale (Dandelion), Equisetum arvense (Horsetail), Angelica archangelica (Angelica), Hydrastis canadensis (Goldenseal), Sodium C14-16 olefin sulfonate, Cocamidopropyl betaine, Coco-glucoside, Glyceryl oleate, Lauryl glucoside, Decyl glucoside, Glycerin, Panthenol (Vitamin B5), Caprylyl glycol, Ethylhexylglycerin, Polyquaternium-10, Hydrolyzed rice protein, Cannabis Sativa (Hemp seed oil), Essential oil blend of Citrus paradisi (Grapefruit), Citrus reticulata blanco var tangerine (Tangerine) and Cananga odorata (Ylang-ylang)</p>
+            <button id="backButton" style="display:none;" onclick="goBack()">
+              Back
+            </button>
+          </div>
+          
+          
+          <p id ="select1" style="text-align: center; display:none">Please select the amount you'd like to dispense.</p>
+          <p id ="select2" style="text-align: center; display:none">To begin dispensing, click the START button</p>
+          <p id ="select3" style="text-align: center; display:none">To stop dispensing, click the STOP button</p>
+          <p id ="select4" style="text-align: center; display:none">Would you like to stop dispensing?</p>
+
+          <div class="text-center">
+            <button id="button16" style="display:none;" onclick="clickFunc16()">
+              <img src="letterA.png" id="A"/>
+              16 oz - $7.99
+            </button>
+
+            <button id="button18" style="display:none;" onclick="clickFunc18()">
+              <img src="letterB.png" id="B"/>
+              18 oz - $9.99
+            </button>
+
+            <button id="button24" style="display:none;" onclick="clickFunc24()">
+              <img src="letterC.png" id="C"/>
+              24 oz - $13.99
+            </button>
+          </div>
+
+          <div class="text-center">
+            <button id="start" style="display:none;" onclick="startFunc()">START</button>
+          </div>
+
+          <div class="text-center">
+            <button id="stop" style="display:none;" onclick="abort = true;">STOP</button>
+          </div>
+
+          <div class="text-center">
+            <button id="yes" style="display:none;" onclick="results()">YES</button>
+            <button id="no" style="display:none;" onclick="startFunc()">NO</button>
+          </div>
+
+          <p id ="thanks" style="text-align: center; display:none">Thank you for using Wonderfil. Below is an overview of your purchase. Have a Wondefil day!</p>
+          <p id ="resultOz" style="text-align: center; display:none"></p>
+          <p id ="resultPrice" style="text-align: center; display:none"></p>
+          <div class="text-center">
+            <button id="home" style="display:none;" onclick="home()">HOME</button>
+          </div>
+
+          <p style="text-align: center;" id="dispensing"></p>
+
+          <div class="container" id="vals" style="display:none;">
+            <h2>Current Ounces: <span id="ounces"></span></h2>
+            <h2>Current Cost: <span id="price"></span></h2>
+            <div class="progress">
+              <div id="bar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+                <p id="num">0%</p>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+
+      </div>
+
+    </div>
+    
+    <img src="wonderfillogo.jpeg" width="250" height="180" class="center">
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+        <script src="javascript.js"></script>
+        </script>
+    </body>
+</html>
