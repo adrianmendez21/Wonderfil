@@ -61,8 +61,6 @@ function screen1f()
     document.getElementById("screen2").style.display = "none";
     document.getElementById("screen3").style.display = "none";
     document.getElementById("screen4").style.display = "none";
-    document.getElementById("screen5").style.display = "none";
-    document.getElementById("screen6").style.display = "none";
     document.getElementById("welc1").style.display = "none";
     document.getElementById("product1").style.display = "block";
     document.getElementById(prodName).style.display = "block";
@@ -80,8 +78,6 @@ function screen2f()
     document.getElementById("screen2").style.display = "none";
     document.getElementById("screen3").style.display = "none";
     document.getElementById("screen4").style.display = "none";
-    document.getElementById("screen5").style.display = "none";
-    document.getElementById("screen6").style.display = "none";
     document.getElementById("welc1").style.display = "none";
     document.getElementById("product1").style.display = "block";
     document.getElementById(prodName).style.display = "block";
@@ -99,8 +95,6 @@ function screen3f()
     document.getElementById("screen2").style.display = "none";
     document.getElementById("screen3").style.display = "none";
     document.getElementById("screen4").style.display = "none";
-    document.getElementById("screen5").style.display = "none";
-    document.getElementById("screen6").style.display = "none";
     document.getElementById("welc1").style.display = "none";
     document.getElementById("product1").style.display = "block";
     document.getElementById(prodName).style.display = "block";
@@ -118,8 +112,6 @@ function screen4f()
     document.getElementById("screen2").style.display = "none";
     document.getElementById("screen3").style.display = "none";
     document.getElementById("screen4").style.display = "none";
-    document.getElementById("screen5").style.display = "none";
-    document.getElementById("screen6").style.display = "none";
     document.getElementById("welc1").style.display = "none";
     document.getElementById("product1").style.display = "block";
     document.getElementById(prodName).style.display = "block";
@@ -260,8 +252,6 @@ function home()
     document.getElementById("screen2").style.display = "inline";
     document.getElementById("screen3").style.display = "inline";
     document.getElementById("screen4").style.display = "inline";
-    document.getElementById("screen5").style.display = "inline";
-    document.getElementById("screen6").style.display = "inline";
     document.getElementById("welc1").style.display = "block";
 }
 
