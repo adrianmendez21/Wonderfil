@@ -295,13 +295,15 @@ function ifCheck()
             document.getElementById("price").innerHTML = "$" + roundedCost;
             elem.style.width = percent + "%";
             document.getElementById("dispensing").innerHTML = "Complete!";
-            alert('Thank you! Have a Wonderfil day!');
-            document.getElementById("button16").style.display = "inline";
-            document.getElementById("button18").style.display = "inline";
-            document.getElementById("button24").style.display = "inline";
+            //alert('Thank you! Have a Wonderfil day!');
+            // document.getElementById("button16").style.display = "inline";
+            // document.getElementById("button18").style.display = "inline";
+            // document.getElementById("button24").style.display = "inline";
             document.getElementById("stop").style.display = "none";
-            document.getElementById("select1").style.display = "block";
+            document.getElementById("select3").style.display = "none";
+            //document.getElementById("select1").style.display = "block";
             clearInterval(myVar);
+            results();
         }
     
         else
