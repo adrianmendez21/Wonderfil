@@ -54,6 +54,7 @@ function goBack()
 
 function screen1f()
 {
+    document.body.style.backgroundColor = "#F07600";
     prodNum = 1;
     prodName = "productName" + prodNum;
     prodDesc = "productDesc" + prodNum;
@@ -71,6 +72,7 @@ function screen1f()
 
 function screen2f()
 {
+    document.body.style.backgroundColor = "#DF9EF5";
     prodNum = 2;
     prodName = "productName" + prodNum;
     prodDesc = "productDesc" + prodNum;
@@ -88,6 +90,7 @@ function screen2f()
 
 function screen3f()
 {
+    document.body.style.backgroundColor = "#D46AF0";
     prodNum = 3;
     prodName = "productName" + prodNum;
     prodDesc = "productDesc" + prodNum;
@@ -105,6 +108,7 @@ function screen3f()
 
 function screen4f()
 {
+    document.body.style.backgroundColor = "#FAC018";
     prodNum = 4;
     prodName = "productName" + prodNum;
     prodDesc = "productDesc" + prodNum;
@@ -244,6 +248,7 @@ function results()
 
 function home()
 {
+    document.body.style.backgroundColor = "#b4a7d5";
     document.getElementById("thanks").style.display = "none";
     document.getElementById("home").style.display = "none";
     document.getElementById("resultOz").style.display = "none";
