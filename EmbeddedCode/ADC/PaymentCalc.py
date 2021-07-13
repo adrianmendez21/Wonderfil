@@ -3,6 +3,7 @@
 
 import EmbeddedCode.ADC.constants as constants
 
+# Import SPI library (for hardware SPI) and MCP3008 library.
 import Adafruit_GPIO.SPI as SPI
 import Adafruit_MCP3008
 
@@ -33,6 +34,8 @@ mcp = Adafruit_MCP3008.MCP3008(clk=constants.ADC_CLK_RP_PIN, cs=constants.ADC_CS
 #get formula so that do not need to keep track of every value taken
 #and instead constantly add to formula so that receiving devices
 #always get the current amnt of volume exported
+
+#go back through imports and only take what is needed - dont need to store excess imports
 
 #enums for state
 currTap = constants.WF_TAP.ONE
