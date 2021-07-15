@@ -1,13 +1,21 @@
 #Constants used for payment calc and state machine + inits
 
-#Lillian Cordelia Gwendolyn 07/14/2021 @ Wonderfil
+#Lillian Cordelia Gwendolyn 07/15/2021 @ Wonderfil
 
 #enum not strictly required but useful for organization
 import enum
 
+#used for RPI GPIO pins
+import RPi.GPIO as GPIO
+
 # Import SPI library (for hardware SPI) and MCP3008 library.
 import Adafruit_GPIO.SPI as SPI
 import Adafruit_MCP3008
+
+#used for RFID reader
+from mfrc522 import SimpleMFRC522
+
+RFIDReader = SimpleMFRC522()
 
 #MCP3008 init code taken from https://learn.adafruit.com/raspberry-pi-analog-to-digital-converters/mcp3008
 #note - software SPI works on any machine with pins plugged in correctly + correct files installed
@@ -27,7 +35,8 @@ ADC_RP_SPI_PORT = 0
 ADC_RP_SPI_DEVICE = 0
 
 # Software SPI configuration:
-mcp = Adafruit_MCP3008.MCP3008(clk=ADC_CLK_RP_PIN, cs=ADC_CS_RP_PIN, miso=ADC_MISO_RP_PIN, mosi=ADC_MOSI_RP_PIN)
+mcp = Adafruit_MCP3008.MCP3008(clk=ADC_CLK_RP_PIN, cs=ADC_CS_RP_PIN, \
+	miso=ADC_MISO_RP_PIN, mosi=ADC_MOSI_RP_PIN)
 
 # Hardware SPI configuration:
 # mcp = Adafruit_MCP3008.MCP3008(spi=SPI.SpiDev(ADC_RP_SPI_PORT, ADC_RP_SPI_DEVICE))
@@ -70,3 +79,15 @@ class WF_STATE(enum.Enum):
 	READY_FOR_POUR = 2
 	RUNNING = 3
 	POUR_COMPLETED = 4
+	PROGRAM_FOB = 5
+	#SHOW_DATA_ON_TERMINAL = 6
+
+class WF_TAP_DATA:
+	TapNum = WF_TAP.NONE
+	ProductName = "Placeholder"
+	CostPerML = 0.00
+
+	def __init__(self, tapnum, productname, costperml) -> None:
+		self.TapNum = tapnum
+		self.ProductName = productname
+		self.CostPerML = costperml

@@ -2,7 +2,7 @@
 #A repository for the functions and data involved
 #Essentially a black box for organization
 
-#Lillian Cordelia Gwendolyn 07/14/2021 @ Wonderfil
+#Lillian Cordelia Gwendolyn 07/15/2021 @ Wonderfil
 
 #time used for delaying current thread to create sampling interval
 from time import sleep
@@ -11,8 +11,15 @@ from sys import exit
 
 import EmbeddedCode.RaspberryPi.constants as constants
 
+#eventually replace with placeholder info
+tap = [constants.WF_TAP_DATA(constants.WF_TAP.NONE, "placeholder", 0.00), \
+	constants.WF_TAP_DATA(constants.WF_TAP.ONE, "Pantene Conditioner", 0.06), \
+	constants.WF_TAP_DATA(constants.WF_TAP.TWO, "Tresemme Shampoo", 0.03), \
+	constants.WF_TAP_DATA(constants.WF_TAP.THREE, "Sauve Essentials Body Wash", 0.10), \
+	constants.WF_TAP_DATA(constants.WF_TAP.FOURE, "Head And Shoulders 2 in 1", 0.05)]
+
 #enums for state
-currTap = constants.WF_TAP.ONE
+currTap = tap[0]
 currState = constants.WF_STATE.WAITING_FOR_CUSTOMER
 #time spent running current tap - used to track if timeout should occur
 timeRunning = 0
@@ -21,16 +28,37 @@ currReading = 0
 #tracking how much volume has been exported over this pour
 totalVolOutput = 0
 
+#ID of current fob being used
+fob_ID = 0
+
 def RunState_ERROR():
    	print("Wonderfil has encountered an error\n")
    	sleep(5)
    	return
 
 def RunState_WAITING_FOR_CUSTOMER():
+	global fob_ID
    	#if signal currState = constants.WF_STATE.TAP_SELECTED
 	#signal is from fob or verifone
 	#meanwhile we check if we recieve a signal on them
-   	sleep(1)
+
+	#ASSUMEDLY this should wait for a card to come by then
+	#store the ID and reset it
+	try:
+		fob_ID = constants.RFIDReader.read_id()
+		#need to better plan what we encode
+		#reset text on reader hopefully
+		#need to also upgrade to the non-simplified version
+		#so that we can specify the exact data to read and write
+		constants.RFIDReader.write("")
+	
+	except:
+		print("fob error")
+		return
+
+	#if has not returned then assumedly has found and reset a fob
+	currState = constants.WF_STATE.FOB_SELECTED
+
    	return
 
 def RunState_FOB_SELECTED():
@@ -38,50 +66,34 @@ def RunState_FOB_SELECTED():
 	global timeRunning
 	global totalVolOutput
 	global currState
-	
 
 	#init things
 	timeRunning = 0
 	totalVolOutput = 0
-	currTap = constants.WF_TAP.NONE
+	currTap = tap[0]
 	currState = constants.WF_STATE.READY_FOR_POUR
 	return
-
-'''
-def RunState_TAP_SELECTED():
-	global currTap
-	global timeRunning
-	global totalVolOutput
-	global currState
-	#get tap from exterior signal
-	currTap = constants.WF_TAP.ONE
-	#init things
-	timeRunning = 0
-	totalVolOutput = 0
-	currState = constants.WF_STATE.READY_FOR_POUR
-	return
-'''
 
 def RunState_READY_FOR_POUR():
-	#global currReading
+	#global totalVolOutput
 	global timeRunning
 	global currState
 	global currTap
 	#look for first point when adc gets a signal
-	for tap in constants.WF_TAP:
-		if(tap == constants.WF_TAP.NONE): continue
+	#read through all 4 taps' adc values
+	for i in range(1, constants.NUM_TAPS):
 
-		currReading = constants.mcp.read_adc(tap)
+		currReading = constants.mcp.read_adc(tap[i].TapNum)
+
 		if(currReading > constants.ADC_MAX_OFF_DIGITAL_VOLTAGE):
 			#must assign in for loop to keep same value of tap
 			#otherwise falls out of scope if moved outside loop
-			currTap = tap
+			currTap = tap[i]
 			break
 		else: continue
-	
-	sleep(constants.SAMPLE_INTERVAL)
 
-	if(currTap == constants.WF_TAP.NONE): return
+	#if has not selected tap OR error in range/tap assignment
+	if(currTap == tap[0]): return
 
 	#else do math to add reading to total vol output
 	#
@@ -91,17 +103,18 @@ def RunState_READY_FOR_POUR():
 	return
 
 def RunState_RUNNING():
-	#global currReading
+	#global totalVolOutput
 	global timeRunning
 	global currState
-	currReading = constants.mcp.read_adc(currTap)
-	if((currReading <= constants.ADC_MAX_OFF_DIGITAL_VOLTAGE) or (timeRunning >= constants.constants.MAX_TIMEOUT)):
+	currReading = constants.mcp.read_adc(currTap.TapNum)
+	if((currReading <= constants.ADC_MAX_OFF_DIGITAL_VOLTAGE) \
+		 or (timeRunning >= constants.MAX_TIMEOUT)):
 		currState = constants.WF_STATE.POUR_COMPLETED
 		return
+
 	#else do math to add reading to total vol output
 	#
 	#
-	sleep(constants.SAMPLE_INTERVAL)
 	timeRunning += constants.SAMPLE_INTERVAL
 	return
 
@@ -112,6 +125,40 @@ def RunState_POUR_COMPLETED():
 	#check for errors
 	#global timeRunning
 	global currState
+	
+
+	#sum costs
+	totalCost = totalVolOutput
+
+	#separate state into two - one for final calculation
+	#and other for writing to fob
+	
+		
+	currState = constants.WF_STATE.WAITING_FOR_CUSTOMER
+	return
+
+def RunState_PROGRAM_FOB():
+	global currState
+	global fob_ID
+
+	#goal is to program info on fob so clerk can check out
+	#by producing barcode from RFID data to then scan and use
+
+	try:
+		if(fob_ID == constants.RFIDReader.read_id()):
+			#update write to include better management of where things go
+			#eg block 1 name block 2 price block 3 data
+			constants.RFIDReader.write(currTap.ProductName + " " \
+				+ totalVolOutput + " " + totalVolOutput * currTap.CostPerML)
+		else:
+			return
+	
+	except:
+		print("fob error")
+		return
+
+	#display sale on terminal for x seconds then back to idle state
+	sleep(5)
 	currState = constants.WF_STATE.WAITING_FOR_CUSTOMER
 	return
 
@@ -123,5 +170,6 @@ RP_SM = {
 	constants.WF_STATE.FOB_SELECTED: RunState_FOB_SELECTED,
 	constants.WF_STATE.READY_FOR_POUR: RunState_READY_FOR_POUR,
 	constants.WF_STATE.RUNNING: RunState_RUNNING,
-	constants.WF_STATE.POUR_COMPLETED: RunState_POUR_COMPLETED
+	constants.WF_STATE.POUR_COMPLETED: RunState_POUR_COMPLETED,
+	constants.WF_STATE.PROGRAM_FOB: RunState_PROGRAM_FOB
 }
