@@ -95,5 +95,17 @@ class WF_TAP_DATA:
 		self.ProductName = productname
 		self.CostPerML = costperml
 
-	#def EncodeTapData(self):
-		#return msgpack.packb({})
+	def EncodeTapData(self, volOut):
+		return msgpack.packb({ 
+			"Tap": self.TapNum,
+			"ProductName": self.ProductName,
+			"TotalVolOutput": volOut,
+			"TotalCost": volOut * self.CostPerML
+		})
+	
+	#decode is used for setting the Wonderfil's taps
+	#to have new product names and costs
+	#it is not to receive the data encoded above
+	#as that part is handled by the cashier within the Wonderfil app
+	def DecodeTapData(self, packedInfo):
+		return msgpack.unpackb(packedInfo)

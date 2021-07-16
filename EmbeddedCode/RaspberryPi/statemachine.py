@@ -143,8 +143,8 @@ def RunState_PROGRAM_FOB():
 		if(fob_ID == constants.RFIDReader.read_id()):
 			#update write to include better management of where things go
 			#eg block 1 name block 2 price block 3 data
-			constants.RFIDReader.write(currTap.ProductName + " " \
-				+ totalVolOutput + " " + totalVolOutput * currTap.CostPerML)
+			#encodes using msgpack
+			constants.RFIDReader.write(currTap.EncodeTapData(totalVolOutput))
 		else:
 			return
 	
