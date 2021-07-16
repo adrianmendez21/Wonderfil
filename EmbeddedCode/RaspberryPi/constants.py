@@ -1,9 +1,11 @@
 #Constants used for payment calc and state machine + inits
 
-#Lillian Cordelia Gwendolyn 07/15/2021 @ Wonderfil
+#Lillian Cordelia Gwendolyn 07/16/2021 @ Wonderfil
 
 #enum not strictly required but useful for organization
 import enum
+#used for encoding onto RFID chip
+import msgpack
 
 #used for RPI GPIO pins
 import RPi.GPIO as GPIO
@@ -47,31 +49,11 @@ MAX_TIMEOUT = 30 #30 sec max
 
 #LIST_SIZE = (MAX_TIMEOUT / SAMPLE_INTERVAL)
 
-'''
-#ports of ADC chip used for each tap
-WF_TAP_ONE_ADC_PIN = 0
-WF_TAP_TWO_ADC_PIN = 2
-WF_TAP_THREE_ADC_PIN = 4
-WF_TAP_FOUR_ADC_PIN = 6
-'''
-
-#number of taps we are using
-NUM_TAPS = 4
-
 #.5V when converted to ADCs 0-1024 scale = 155
 #number is used as the maximum for us to consider the pot to still be off
 ADC_MAX_OFF_DIGITAL_VOLTAGE = 155
 
-#enum to organize by tap numbers so i dont need to use numbers
-#doubles as port used for ADC chip reading
-#0-7 correspond to pins 0-7 on the chip
-class WF_TAP(enum.Enum):
-	NONE = -1
-	ONE = 0
-	TWO = 2
-	THREE = 4
-	FOUR = 6
-
+#states used for WF state machine
 class WF_STATE(enum.Enum):
 	ERROR = -1
 	WAITING_FOR_CUSTOMER = 0
@@ -82,6 +64,27 @@ class WF_STATE(enum.Enum):
 	PROGRAM_FOB = 5
 	#SHOW_DATA_ON_TERMINAL = 6
 
+#number of taps we are using
+NUM_TAPS = 4
+
+#ports of ADC chip used for each tap
+WF_TAP_ONE_ADC_PIN = 0
+WF_TAP_TWO_ADC_PIN = 2
+WF_TAP_THREE_ADC_PIN = 4
+WF_TAP_FOUR_ADC_PIN = 6
+
+#enum to organize by tap numbers so i dont need to use numbers
+#doubles as port used for ADC chip reading
+#0-7 correspond to pins 0-7 on the chip
+
+class WF_TAP(enum.Enum):
+	NONE = -1
+	ONE = WF_TAP_ONE_ADC_PIN
+	TWO = WF_TAP_TWO_ADC_PIN
+	THREE = WF_TAP_THREE_ADC_PIN
+	FOUR = WF_TAP_FOUR_ADC_PIN
+
+#object for what a tap needs to store
 class WF_TAP_DATA:
 	TapNum = WF_TAP.NONE
 	ProductName = "Placeholder"
@@ -91,3 +94,6 @@ class WF_TAP_DATA:
 		self.TapNum = tapnum
 		self.ProductName = productname
 		self.CostPerML = costperml
+
+	#def EncodeTapData(self):
+		#return msgpack.packb({})

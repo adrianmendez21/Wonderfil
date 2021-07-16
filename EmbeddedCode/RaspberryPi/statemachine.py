@@ -2,7 +2,7 @@
 #A repository for the functions and data involved
 #Essentially a black box for organization
 
-#Lillian Cordelia Gwendolyn 07/15/2021 @ Wonderfil
+#Lillian Cordelia Gwendolyn 07/16/2021 @ Wonderfil
 
 #time used for delaying current thread to create sampling interval
 from time import sleep
@@ -126,13 +126,8 @@ def RunState_POUR_COMPLETED():
 	#global timeRunning
 	global currState
 	
-
 	#sum costs
 	totalCost = totalVolOutput
-
-	#separate state into two - one for final calculation
-	#and other for writing to fob
-	
 		
 	currState = constants.WF_STATE.WAITING_FOR_CUSTOMER
 	return
