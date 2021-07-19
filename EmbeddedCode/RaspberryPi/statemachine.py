@@ -2,10 +2,10 @@
 #A repository for the functions and data involved
 #Essentially a black box for organization
 
-#Lillian Cordelia Gwendolyn 07/16/2021 @ Wonderfil
+#Lillian Cordelia Gwendolyn 07/19/2021 @ Wonderfil
 
 #time used for delaying current thread to create sampling interval
-from time import sleep
+from time import sleep, time
 #sys used for exiting and throwing errors
 from sys import exit
 
@@ -16,13 +16,15 @@ tap = [constants.WF_TAP_DATA(constants.WF_TAP.NONE, "placeholder", 0.00), \
 	constants.WF_TAP_DATA(constants.WF_TAP.ONE, "Pantene Conditioner", 0.06), \
 	constants.WF_TAP_DATA(constants.WF_TAP.TWO, "Tresemme Shampoo", 0.03), \
 	constants.WF_TAP_DATA(constants.WF_TAP.THREE, "Sauve Essentials Body Wash", 0.10), \
-	constants.WF_TAP_DATA(constants.WF_TAP.FOURE, "Head And Shoulders 2 in 1", 0.05)]
+	constants.WF_TAP_DATA(constants.WF_TAP.FOUR, "Head And Shoulders 2 in 1", 0.05)]
 
 #enums for state
 currTap = tap[0]
 currState = constants.WF_STATE.WAITING_FOR_CUSTOMER
 #time spent running current tap - used to track if timeout should occur
 timeRunning = 0
+#last time reading so we know how much time has passed
+prevTimeAccessed = 0
 #reading from 0 to 1024
 currReading = 0
 #tracking how much volume has been exported over this pour
@@ -46,6 +48,10 @@ def RunState_WAITING_FOR_CUSTOMER():
 	#store the ID and reset it
 	try:
 		fob_ID = constants.RFIDReader.read_id()
+
+		#if we read in that it has been prewritten to program wonderfil
+		#then skip blanking it and enter separate programming state
+
 		#need to better plan what we encode
 		#reset text on reader hopefully
 		#need to also upgrade to the non-simplified version
@@ -77,6 +83,7 @@ def RunState_FOB_SELECTED():
 def RunState_READY_FOR_POUR():
 	#global totalVolOutput
 	global timeRunning
+	global prevTimeAccessed
 	global currState
 	global currTap
 	#look for first point when adc gets a signal
@@ -98,13 +105,17 @@ def RunState_READY_FOR_POUR():
 	#else do math to add reading to total vol output
 	#
 	#
-	timeRunning += constants.SAMPLE_INTERVAL
+	currTime = time()
+	timeRunning += currTime - prevTimeAccessed
+	prevTimeAccessed = currTime
+	#timeRunning += constants.SAMPLE_INTERVAL
 	currState = constants.WF_STATE.RUNNING
 	return
 
 def RunState_RUNNING():
 	#global totalVolOutput
 	global timeRunning
+	global prevTimeAccessed
 	global currState
 	currReading = constants.mcp.read_adc(currTap.TapNum)
 	if((currReading <= constants.ADC_MAX_OFF_DIGITAL_VOLTAGE) \
@@ -115,7 +126,10 @@ def RunState_RUNNING():
 	#else do math to add reading to total vol output
 	#
 	#
-	timeRunning += constants.SAMPLE_INTERVAL
+	currTime = time()
+	timeRunning += currTime - prevTimeAccessed
+	prevTimeAccessed = currTime
+	#timeRunning += constants.SAMPLE_INTERVAL
 	return
 
 def RunState_POUR_COMPLETED():
