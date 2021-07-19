@@ -70,11 +70,13 @@ def RunState_WAITING_FOR_CUSTOMER():
 def RunState_FOB_SELECTED():
 	global currTap
 	global timeRunning
+	global prevTimeAccessed
 	global totalVolOutput
 	global currState
 
 	#init things
 	timeRunning = 0
+	prevTimeAccessed = time()
 	totalVolOutput = 0
 	currTap = tap[0]
 	currState = constants.WF_STATE.READY_FOR_POUR
