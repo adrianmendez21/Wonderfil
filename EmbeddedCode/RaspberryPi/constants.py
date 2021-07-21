@@ -1,57 +1,60 @@
 #Constants used for payment calc and state machine + inits
 
-#Lillian Cordelia Gwendolyn 07/16/2021 @ Wonderfil
+#Lillian Cordelia Gwendolyn 07/21/2021 @ Wonderfil
 
 #enum not strictly required but useful for organization
 import enum
 #used for encoding onto RFID chip
-import msgpack
+#import msgpack
 
 #used for RPI GPIO pins
 import RPi.GPIO as GPIO
 
-# Import SPI library (for hardware SPI) and MCP3008 library.
-import Adafruit_GPIO.SPI as SPI
-import Adafruit_MCP3008
+#libraries needed for MCP3008 - https://github.com/adafruit/Adafruit_CircuitPython_MCP3xxx/
+import busio
+import digitalio
+import board
+import adafruit_mcp3xxx.mcp3008 as MCP
+from adafruit_mcp3xxx.analog_in import AnalogIn
 
 #used for RFID reader
 from mfrc522 import SimpleMFRC522
 
 RFIDReader = SimpleMFRC522()
 
-#MCP3008 init code taken from https://learn.adafruit.com/raspberry-pi-analog-to-digital-converters/mcp3008
-#note - software SPI works on any machine with pins plugged in correctly + correct files installed
-#but is slightly slower/bulkier than hardware SPI
-#hardware SPI requires enabling a few settings on the RP
-#but gives slightly better performance
+#code to init MCP3008 ADC chip
+# create the spi bus
+spi = busio.SPI(clock=board.SCK, MISO=board.MISO, MOSI=board.MOSI)
 
-#ports of Raspberry Pi used to drive ADC
-#taken from https://learn.adafruit.com/raspberry-pi-analog-to-digital-converters/mcp3008
-#ports for software-run SPI
-ADC_CLK_RP_PIN = 18
-ADC_MISO_RP_PIN = 23
-ADC_MOSI_RP_PIN = 24
-ADC_CS_RP_PIN = 25
-#ports for hardware-run SPI
-ADC_RP_SPI_PORT = 0
-ADC_RP_SPI_DEVICE = 0
+# create the cs (chip select)
+cs = digitalio.DigitalInOut(board.D5)
 
-# Software SPI configuration:
-mcp = Adafruit_MCP3008.MCP3008(clk=ADC_CLK_RP_PIN, cs=ADC_CS_RP_PIN, \
-	miso=ADC_MISO_RP_PIN, mosi=ADC_MOSI_RP_PIN)
+# create the mcp object
+mcp = MCP.MCP3008(spi, cs)
 
-# Hardware SPI configuration:
-# mcp = Adafruit_MCP3008.MCP3008(spi=SPI.SpiDev(ADC_RP_SPI_PORT, ADC_RP_SPI_DEVICE))
+# create output pins
+ADC_CH0 = AnalogIn(mcp, MCP.P0)
+ADC_CH1 = AnalogIn(mcp, MCP.P1)
+ADC_CH2 = AnalogIn(mcp, MCP.P2)
+ADC_CH3 = AnalogIn(mcp, MCP.P3)
+
+#ADC can be accessed from doing
+#ADC_CH0.value or ADC_CH0.voltage
+#value returns 0 to 65472
+#voltage returns 0 to VREF (3.3v)
 
 #timing constants
-SAMPLE_INTERVAL = 0.05 #20x/sec
+SAMPLE_INTERVAL = 0.50 #20x/sec
 MAX_TIMEOUT = 30 #30 sec max
 
 #LIST_SIZE = (MAX_TIMEOUT / SAMPLE_INTERVAL)
 
 #.5V when converted to ADCs 0-1024 scale = 155
 #number is used as the maximum for us to consider the pot to still be off
-ADC_MAX_OFF_DIGITAL_VOLTAGE = 155
+#SCALE IS NOW MUCH LARGER
+#VALUE ADJUSTED ACCORDINGLY
+#actually back into voltage now
+ADC_MAX_OFF_VOLTAGE = 1.5
 
 #states used for WF state machine
 class WF_STATE(enum.Enum):
@@ -67,45 +70,25 @@ class WF_STATE(enum.Enum):
 #number of taps we are using
 NUM_TAPS = 4
 
-#ports of ADC chip used for each tap
-WF_TAP_ONE_ADC_PIN = 0
-WF_TAP_TWO_ADC_PIN = 2
-WF_TAP_THREE_ADC_PIN = 4
-WF_TAP_FOUR_ADC_PIN = 6
-
 #enum to organize by tap numbers so i dont need to use numbers
-#doubles as port used for ADC chip reading
-#0-7 correspond to pins 0-7 on the chip
 
 class WF_TAP(enum.Enum):
 	NONE = -1
-	ONE = WF_TAP_ONE_ADC_PIN
-	TWO = WF_TAP_TWO_ADC_PIN
-	THREE = WF_TAP_THREE_ADC_PIN
-	FOUR = WF_TAP_FOUR_ADC_PIN
+	ONE = 1
+	TWO = 2
+	THREE = 3
+	FOUR = 4
 
 #object for what a tap needs to store
 class WF_TAP_DATA:
 	TapNum = WF_TAP.NONE
+	ADC_Ch = ADC_CH0
 	ProductName = "Placeholder"
 	CostPerML = 0.00
 
-	def __init__(self, tapnum, productname, costperml) -> None:
+	def __init__(self, tapnum, adc_ch, productname, costperml) -> None:
 		self.TapNum = tapnum
+		self.ADC_CH = adc_ch
 		self.ProductName = productname
 		self.CostPerML = costperml
-
-	def EncodeTapData(self, volOut):
-		return msgpack.packb({ 
-			"Tap": self.TapNum,
-			"ProductName": self.ProductName,
-			"TotalVolOutput": volOut,
-			"TotalCost": volOut * self.CostPerML
-		})
-	
-	#decode is used for setting the Wonderfil's taps
-	#to have new product names and costs
-	#it is not to receive the data encoded above
-	#as that part is handled by the cashier within the Wonderfil app
-	def DecodeTapData(self, packedInfo):
-		return msgpack.unpackb(packedInfo)
+		

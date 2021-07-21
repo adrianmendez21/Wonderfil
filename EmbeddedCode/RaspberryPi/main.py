@@ -2,7 +2,7 @@
 #Handles the state machine of the RP and communicates with other devices
 #To send calculated info to, as well as manage the motors
 
-#Lillian Cordelia Gwendolyn 07/15/2021 @ Wonderfil
+#Lillian Cordelia Gwendolyn 07/21/2021 @ Wonderfil
 
 #time used for delaying current thread to create sampling interval
 from time import sleep
@@ -12,8 +12,8 @@ from sys import exit
 #used for RPI GPIO pins
 import RPi.GPIO as GPIO
 
-import EmbeddedCode.RaspberryPi.constants as constants
-import EmbeddedCode.RaspberryPi.statemachine as SM
+import constants as constants
+import statemachine as SM
 
 #background -
 #there is only one terminal, and only one tap can run at any given time
@@ -27,6 +27,8 @@ import EmbeddedCode.RaspberryPi.statemachine as SM
 #consider removing initial fob requirement - only use fob at end
 #to handle final payment, and instead wait until someone pours from tap
 #to start?
+
+#fix wiring of adc - seems to be reading ungrounded vals of 1.2375.. volts for all ports instead of just zero
 
 #main block
 #try except finally from https://raspi.tv/2013/rpi-gpio-basics-3-how-to-exit-gpio-programs-cleanly-avoid-warnings-and-protect-your-pi
