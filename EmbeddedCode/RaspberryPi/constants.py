@@ -11,6 +11,11 @@ import enum
 import RPi.GPIO as GPIO
 
 #libraries needed for MCP3008 - https://github.com/adafruit/Adafruit_CircuitPython_MCP3xxx/
+#also https://learn.adafruit.com/mcp3008-spi-adc/python-circuitpython
+#note from producer of MCP3008 using circuitpython library:
+#Even though the MCP3008 is a 10-bit ADC, the value returned
+#is a 16-bit number to provide a consistent interface
+#across ADCs in CircuitPython
 import busio
 import digitalio
 import board
@@ -49,11 +54,8 @@ MAX_TIMEOUT = 30 #30 sec max
 
 #LIST_SIZE = (MAX_TIMEOUT / SAMPLE_INTERVAL)
 
-#.5V when converted to ADCs 0-1024 scale = 155
-#number is used as the maximum for us to consider the pot to still be off
-#SCALE IS NOW MUCH LARGER
-#VALUE ADJUSTED ACCORDINGLY
-#actually back into voltage now
+#ADC can return voltage value, so we use that
+#instead of digital value
 ADC_MAX_OFF_VOLTAGE = 1.5
 
 #states used for WF state machine
