@@ -2,12 +2,14 @@
 #Handles the state machine of the RP and communicates with other devices
 #To send calculated info to, as well as manage the motors
 
-#Lillian Cordelia Gwendolyn 07/21/2021 @ Wonderfil
+#Lillian Cordelia Gwendolyn 07/22/2021 @ Wonderfil
 
 #time used for delaying current thread to create sampling interval
 from time import sleep
 #sys used for exiting and throwing errors
 from sys import exit
+#traceback used to print the current traceback when any exception happens
+from traceback import print_exc
 
 #used for RPI GPIO pins
 import RPi.GPIO as GPIO
@@ -42,9 +44,11 @@ try:
 
 except KeyboardInterrupt:
 	print("exited by ctrl c keyboard interrupt exception")
+	print_exc()
 
 except:
 	print("exited by non keyboard exception")
+	print_exc()
 
 finally:
 	#will never be reached unless exception occurs, here for propriety

@@ -2,12 +2,13 @@
 #A repository for the functions and data involved
 #Essentially a black box for organization
 
-#Lillian Cordelia Gwendolyn 07/21/2021 @ Wonderfil
+#Lillian Cordelia Gwendolyn 07/22/2021 @ Wonderfil
 
 #time used for delaying current thread to create sampling interval
 from time import sleep, time
 #sys used for exiting and throwing errors
 from sys import exit
+import traceback
 
 import constants as constants
 
@@ -72,7 +73,6 @@ def RunState_WAITING_FOR_CUSTOMER():
 def RunState_FOB_SELECTED():
 	global currTap
 	global timeRunning
-	global prevTimeAccessed
 	global totalVolOutput
 	global currState
 
@@ -80,7 +80,6 @@ def RunState_FOB_SELECTED():
 
 	#init things
 	timeRunning = 0
-	prevTimeAccessed = time()
 	totalVolOutput = 0
 	currTap = 0
 	currState = constants.WF_STATE.READY_FOR_POUR
@@ -96,10 +95,7 @@ def RunState_READY_FOR_POUR():
 	#read through all 4 taps' adc values
 
 	print("ready to pour - select tap")
-
 	for i in range(1, constants.NUM_TAPS + 1):
-
-		print("inside range block")
 
 		print("reading tap ", i)
 		currReading = tap[i].ADC_Ch.voltage
@@ -110,21 +106,20 @@ def RunState_READY_FOR_POUR():
 			print("have selected tap", i)
 			currTap = i
 			break
-		else: continue
 
 	#if has not selected tap OR error in range/tap assignment
-	if(currTap == 0): return
+	if(currTap <= 0): return
 
 	#else do math to add reading to total vol output
 	#
 	#
 
-	print("tap ", currTap.tapNum, " has been selected")
+	#will not get full time difference
+	#but necessary so that if time between selecting a fob
+	#and choosing a tap is high that
+	#this will not carry over into the max shutoff time
+	prevTimeAccessed = time()
 
-	currTime = time()
-	timeRunning += currTime - prevTimeAccessed
-	prevTimeAccessed = currTime
-	#timeRunning += constants.SAMPLE_INTERVAL
 	currState = constants.WF_STATE.RUNNING
 	return
 
@@ -137,12 +132,12 @@ def RunState_RUNNING():
 	print("running - release tap to stop")
 
 	currReading = tap[currTap].ADC_Ch.voltage
-	if((currReading <= constants.ADC_MAX_OFF_DIGITAL_VOLTAGE) \
+	if((currReading <= constants.ADC_MAX_OFF_VOLTAGE) \
 		 or (timeRunning >= constants.MAX_TIMEOUT)):
 		currState = constants.WF_STATE.POUR_COMPLETED
 		return
 
-	print(currReading)
+	print("current reading = ", currReading)
 
 	#else do math to add reading to total vol output
 	#
